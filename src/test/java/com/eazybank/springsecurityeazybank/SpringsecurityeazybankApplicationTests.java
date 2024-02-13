@@ -1,10 +1,10 @@
-package com.eazybank.springsecuritybasic;
+package com.eazybank.springsecurityeazybank;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringsecuritybasicApplicationTests {
+class SpringsecurityeazybankApplicationTests {
 
 	@Test
 	void contextLoads() {

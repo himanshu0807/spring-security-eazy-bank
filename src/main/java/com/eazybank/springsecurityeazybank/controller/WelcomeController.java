@@ -1,4 +1,4 @@
-package com.eazybank.springsecuritybasic.controller;
+package com.eazybank.springsecurityeazybank.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
