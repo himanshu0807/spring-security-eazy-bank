@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -25,6 +25,19 @@ public class ProjectSecurityConfig {
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
         return http.build();
+    }
+
+    /**
+     * Password encoder bean to encode the password using the BCrypt
+     * example value - "$2a$10$vqyURisnOEBr0vWHDMpCrOfNm8hrWG1P9gwXU1dvMpJkS3D/pFT.6"
+     * the first three character indicate the version of BCrypt, the next three character indicate the workload factor, remaining is the
+     * hash value
+     *
+     * @return reference object of interface
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     /*@Bean
@@ -61,11 +74,4 @@ public class ProjectSecurityConfig {
         return new JdbcUserDetailsManager(dataSource);
     }*/
 
-    /**
-     * @return
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
 }
