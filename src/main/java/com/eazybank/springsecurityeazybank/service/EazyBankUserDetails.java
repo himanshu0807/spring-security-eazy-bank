@@ -1,4 +1,4 @@
-package com.eazybank.springsecurityeazybank.config;
+package com.eazybank.springsecurityeazybank.service;
 
 import com.eazybank.springsecurityeazybank.model.Customer;
 import com.eazybank.springsecurityeazybank.repository.CustomerJPARepository;
@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+/*
+As we are giving the implementation for the AuthenticationProvider we are we do not need the EBUserDetail service class that is used by DaoAuthenticationProvider
+ */
+//@Service
 public class EazyBankUserDetails implements UserDetailsService {
 
     @Autowired
