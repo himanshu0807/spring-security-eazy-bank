@@ -154,6 +154,35 @@ CREATE TABLE contact_messages (
   create_dt DATE,
   PRIMARY KEY (contact_id)
 );
+-----------------------
 
+drop table authorities;
 
+CREATE TABLE authorities (
+  id SERIAL PRIMARY KEY,
+  customer_id INT NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  CONSTRAINT fk_customer_id FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
 
+INSERT INTO authorities (customer_id, name)
+VALUES (1, 'VIEWACCOUNT');
+
+INSERT INTO authorities (customer_id, name)
+VALUES (1, 'VIEWCARDS');
+
+INSERT INTO authorities (customer_id, name)
+VALUES (1, 'VIEWLOANS');
+
+INSERT INTO authorities (customer_id, name)
+VALUES (1, 'VIEWBALANCE');
+------------------------
+
+DELETE FROM authorities;
+
+INSERT INTO authorities (customer_id, name)
+VALUES (1, 'ROLE_USER');
+
+INSERT INTO authorities (customer_id, name)
+VALUES (1, 'ROLE_ADMIN');
+------------------------
