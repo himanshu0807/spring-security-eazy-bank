@@ -22,6 +22,7 @@ public class NoticesController {
         List<Notices> notices = noticeRepository.findAllActiveNotices();
         if (notices != null) {
             return ResponseEntity.ok()
+                                 // to allow the request after 60 seconds meanwhile use from cache
                                  .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
                                  .body(notices);
         } else {
