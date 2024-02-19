@@ -1,5 +1,6 @@
 package com.eazybank.springsecurityeazybank.config;
 
+import com.eazybank.springsecurityeazybank.model.Authority;
 import com.eazybank.springsecurityeazybank.model.Customer;
 import com.eazybank.springsecurityeazybank.repository.CustomerJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /*
-As we are giving the implementation for the AuthenticationProvider we are we do not need the EBUserDetail service class that is used by DaoAuthenticationProvider
+As we are giving the implementation for the AuthenticationProvider we are we do not need the EBUserDetail service class that is used by
+DaoAuthenticationProvider
  */
 @Component
 public class EazyBankUserPwdAuthenticationProvider implements AuthenticationProvider {
@@ -42,13 +45,21 @@ public class EazyBankUserPwdAuthenticationProvider implements AuthenticationProv
             if (passwordEncoder.matches(pwd, customers.get(0).getPwd())) {
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority(customers.get(0).getRole()));
-                return new UsernamePasswordAuthenticationToken(username, pwd, authorities);
+                return new UsernamePasswordAuthenticationToken(username, pwd, getGrantedAuthorities(customers.get(0).getAuthorities()));
             } else {
                 throw new BadCredentialsException("Invalid password!");
             }
         } else {
             throw new BadCredentialsException("No user registered with this details!");
         }
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (Authority authority : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+        }
+        return grantedAuthorities;
     }
 
     /**

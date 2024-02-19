@@ -1,15 +1,23 @@
 package com.eazybank.springsecurityeazybank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     private int id;
 
@@ -20,10 +28,15 @@ public class Customer {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    // Only to be the part of request from UI but not to be the part of response - sensitive info
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String pwd;
 
     private String role;
+
+    @JsonIgnore // as not to be the part of the request from UI - sensitive info
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    private Set<Authority> authorities;
 
     @Column(name = "create_dt")
     private Date createDate;
@@ -74,6 +87,15 @@ public class Customer {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public Customer setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+        return this;
     }
 
     public Date getCreateDate() {
