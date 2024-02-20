@@ -1,6 +1,9 @@
 package com.eazybank.springsecurityeazybank.config;
 
+import com.eazybank.springsecurityeazybank.filter.AuthoritiesLoggingAtFilter;
+import com.eazybank.springsecurityeazybank.filter.AuthoritiesLoggingFilter;
 import com.eazybank.springsecurityeazybank.filter.CsrfCookieFilter;
+import com.eazybank.springsecurityeazybank.filter.RequestValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -51,6 +54,9 @@ public class ProjectSecurityConfig {
                                   .ignoringRequestMatchers("/contact", "/register")
                                   .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
+                .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthoritiesLoggingFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         (requests) -> requests.requestMatchers("/myAccount").hasRole("USER")
                                               .requestMatchers("myBalance").hasAnyRole("USER", "ADMIN")

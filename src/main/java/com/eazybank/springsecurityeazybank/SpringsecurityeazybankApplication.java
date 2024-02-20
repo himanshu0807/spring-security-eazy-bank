@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 //just in case of we have our jps repo and entity outside the base package
 //@EnableJpaRepositories("com.eazybank.springsecurityeazybank.repository")
 //@EntityScan("com.eazybank.springsecurityeazybank.model")
-//@EnableWebSecurity - need the annotation to enable the spring security if we are using the spring, in spring-boot it is enabled automatically based on the classpath dependencies we have
+//Need the annotation to enable the spring security if we are using the spring, in spring-boot it is enabled automatically based on the classpath dependencies we have
+// Also to enable the debugging of spring security which can help in debugging the filter flow, not for prod
+//@EnableWebSecurity(debug = true) - Issue with version 3.2.1
 public class SpringsecurityeazybankApplication {
 
 	public static void main(String[] args) {
