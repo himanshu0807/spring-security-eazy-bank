@@ -3,6 +3,8 @@ package com.eazybank.springsecurityeazybank.config;
 import com.eazybank.springsecurityeazybank.filter.AuthoritiesLoggingAtFilter;
 import com.eazybank.springsecurityeazybank.filter.AuthoritiesLoggingFilter;
 import com.eazybank.springsecurityeazybank.filter.CsrfCookieFilter;
+import com.eazybank.springsecurityeazybank.filter.JWTTokenGeneratorFilter;
+import com.eazybank.springsecurityeazybank.filter.JWTTokenValidatorFilter;
 import com.eazybank.springsecurityeazybank.filter.RequestValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +18,9 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -33,15 +37,17 @@ public class ProjectSecurityConfig {
          * Another not so ok way is using @CrossOrigin on the controller in backend
          */
         /* now we need to explicitly configure if we do not want to save the user detail to security context */
-        http
+        /* we want our spring security not to generate any JSession Id or http session */
+        http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .securityContext(sc -> sc.requireExplicitSave(false))
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+//                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .cors(c -> c.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
                     corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
                     corsConfiguration.setAllowCredentials(true);
                     corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+                    corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
                     corsConfiguration.setMaxAge(3600L);
                     return corsConfiguration;
                 }))
@@ -57,6 +63,8 @@ public class ProjectSecurityConfig {
                 .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
                 .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         (requests) -> requests.requestMatchers("/myAccount").hasRole("USER")
                                               .requestMatchers("myBalance").hasAnyRole("USER", "ADMIN")
