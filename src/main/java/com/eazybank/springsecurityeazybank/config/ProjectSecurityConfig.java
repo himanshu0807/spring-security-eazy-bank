@@ -60,11 +60,12 @@ public class ProjectSecurityConfig {
                                   .ignoringRequestMatchers("/contact", "/register")
                                   .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
+                // commenting out as we will be using the keycloak to get token
+                /*.addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
                 .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
-                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)*/
                 .authorizeHttpRequests(
                         (requests) -> requests.requestMatchers("/myAccount").hasRole("USER")
                                               .requestMatchers("myBalance").hasAnyRole("USER", "ADMIN")
@@ -84,11 +85,12 @@ public class ProjectSecurityConfig {
      * hash value
      *
      * @return reference object of interface
+     * not required as we be using the keycloak
      */
-    @Bean
+    /*@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    }*/
 
     /*@Bean
     public InMemoryUserDetailsManager userDetailsManager(){

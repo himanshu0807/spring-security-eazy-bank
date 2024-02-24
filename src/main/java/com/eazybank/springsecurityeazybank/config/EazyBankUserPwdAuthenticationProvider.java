@@ -20,9 +20,10 @@ import java.util.Set;
 
 /*
 As we are giving the implementation for the AuthenticationProvider we are we do not need the EBUserDetail service class that is used by
-DaoAuthenticationProvider
+DaoAuthenticationProvider. With this class we perform the authentication of user with the help of database.
+Will not be required when we will be using keycloak
  */
-@Component
+//@Component
 public class EazyBankUserPwdAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
