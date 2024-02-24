@@ -21,7 +21,8 @@ public class LoginController {
     @Autowired
     private CustomerJPARepository customerRepository;
 
-    @Autowired
+    // commented as in keycloak we do not manage password encryption
+    //@Autowired
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
